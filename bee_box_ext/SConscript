@@ -1,0 +1,28 @@
+import os
+
+Import('RTT_ROOT')
+from building import *
+
+cwd = GetCurrentDir()
+lwip_root = os.path.join(RTT_ROOT, 'components', 'net', 'lwip', 'lwip-2.1.2')
+
+src = [
+    os.path.join(cwd, 'bmi088', 'bmi088_agent.c'),
+]
+
+CPPPATH = [
+    os.path.join(cwd, 'bmi088'),
+]
+
+if GetDepend(['RT_USING_LWIP', 'RT_USING_LWIP212']):
+    src += [
+        os.path.join(lwip_root, 'src', 'apps', 'mqtt', 'mqtt.c'),
+    ]
+    CPPPATH += [
+        os.path.join(lwip_root, 'src', 'include'),
+        os.path.join(lwip_root, 'src', 'include', 'netif'),
+    ]
+
+group = DefineGroup('BeeBoxExt', src, depend=[''], CPPPATH=CPPPATH)
+
+Return('group')

@@ -1,25 +1,15 @@
-# for module compiling
-import os
-Import('RTT_ROOT')
-Import('rtconfig')
 from building import *
-from gcc import *
 
 cwd = GetCurrentDir()
-src = []
-CPPPATH = [cwd]
-group = []
-list = os.listdir(cwd)
+src = Glob('SGP40/*.c')
+src += Glob('MAX9814/*.c')
+src += Glob('audio_analysis/*.c')
+src += Glob('camera/*.c')
+src += Glob('LED/*.c')
+src += Glob('Pump/*.c')
+src += Glob('HX711/*.c')
+src += Glob('my_Alarm/*.c')
+CPPPATH = [cwd, cwd + '/SGP40', cwd + '/MAX9814', cwd + '/audio_analysis', cwd + '/camera', cwd + '/LED', cwd + '/Pump', cwd + '/HX711', cwd + '/my_Alarm']
 
-if rtconfig.PLATFORM in ['iccarm'] + GetGCCLikePLATFORM():
-    if rtconfig.PLATFORM == 'iccarm' or GetOption('target') != 'mdk5':
-        CPPPATH = [cwd, cwd + '/applications/camera']
-        src = Glob('./src/*.c')
-        group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
-
-for d in list:
-    path = os.path.join(cwd, d)
-    if os.path.isfile(os.path.join(path, 'SConscript')):
-        group = group + SConscript(os.path.join(d, 'SConscript'))
-
+group = DefineGroup('BeeApp', src, depend=[''], CPPPATH=CPPPATH)
 Return('group')
